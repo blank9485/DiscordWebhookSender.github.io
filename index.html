@@ -15,7 +15,10 @@
             background-color: #36393f;
             color: #dcddde;
         }
-        .webhook-container {
+        #webhook-name {
+    margin-bottom: 1rem;
+}
+            .webhook-container {
             background-color: #2f3136;
             padding: 2rem;
             border-radius: 8px;
@@ -73,42 +76,36 @@
 <body>
     <div class="webhook-container">
         <h1>Discord Webhook Sender</h1>
-        <input type="text" id="webhook-url" placeholder="Enter webhook URL">
+        <input type="text" id="webhook-name" placeholder="Enter webhook name">
+<input type="text" id="webhook-url" placeholder="Enter webhook URL">
         <textarea id="message-content" placeholder="Enter your message"></textarea>
         <button id="send-button">Send Message</button>
         <div id="status"></div>
     </div>
 
     <script>
-        async function sendWebhook() {
-            const webhookUrl = document.getElementById('webhook-url').value;
-            const messageContent = document.getElementById('message-content').value;
-            const statusElement = document.getElementById('status');
+    async function sendWebhook() {
+    const webhookName = document.getElementById('webhook-name').value;
+    
+    
+    if (!webhookName || !webhookUrl || !messageContent) {
+        
 
-            if (!webhookUrl || !messageContent) {
-                statusElement.textContent = 'Please fill in all fields.';
-                statusElement.style.color = '#ff6b6b';
-                return;
-            }
+ 
+    body: JSON.stringify({
+        username: webhookName,
+        content: messageContent
+    }),
 
-            statusElement.textContent = 'Sending...';
-            statusElement.style.color = '#dcddde';
-
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ content: messageContent }),
-                });
+    
+}
 
                 if (response.ok) {
                     statusElement.textContent = 'Message sent successfully!';
                     statusElement.style.color = '#43b581';
                     document.getElementById('message-content').value = '';
                 } else {
-                    throw new Error('Failed to send message');
+                    throw new Error('The message could not be delivered to the Discord webhook. Please double-check the webhook URL for any errors and ensure it's active.');
                 }
             } catch (error) {
                 statusElement.textContent = 'Error: ' + error.message;
